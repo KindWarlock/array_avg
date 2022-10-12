@@ -117,18 +117,17 @@ section .text
 global _start
  
 _start:
-    avg x, xlen
-    mov [avg_one], eax
-    mov [avg_one_dec], edx
-
     
     avg y, ylen
     mov [avg_two], eax
     mov [avg_two_dec], edx
     
+    avg x, xlen
+    mov [avg_one], eax
+    mov [avg_one_dec], edx
     
-    mov edx, [avg_two_dec]
-    sub edx, [avg_one_dec]
+    mov edx, [avg_one_dec]
+    sub edx, [avg_two_dec]
     mov eax, edx
     
     cmp edx, dword 0
@@ -137,10 +136,10 @@ _start:
     mov ecx, dword -1
     mul ecx
     mov edx, eax
-    sub [avg_two], dword 1
+    sub [avg_one], dword 1
 _sub:
-    mov eax, [avg_two]
-    sub eax, [avg_one]
+    mov eax, [avg_one]
+    sub eax, [avg_two]
     cmp eax, dword 0
     
     jge _print
@@ -149,9 +148,11 @@ _sub:
     mov ecx, dword -1
     mul ecx
     pop edx
+    print 1, minus
 _print:
     find_dec edx, xlen
     mov edx, [temp]
+    
     print_dec
     
     print nlen, newline
@@ -167,10 +168,12 @@ section .data
     newline db 0xA, 0XD
     nlen equ $ - newline
     point db ','
+    minus db '-'
     
-    x dd 5, 3, 3
+    x dd 5, 3, 2, 6, 1, 7, 4
     xlen equ $ - x
-    y dd 5, 3, 2
+
+    y dd 0, 10, 1, 9, 2, 8, 5
     ylen equ $ - y
     
 section .bss
@@ -182,4 +185,3 @@ section .bss
     result resb 1
     
     temp resd 1
- 
